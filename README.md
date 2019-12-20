@@ -5,8 +5,6 @@ A mobile device with a GPS module and a WIFI module (with a monitor-mode capabil
 
 The data is outputted as a csv file that can be imported into a 3D program and viewed as a pointcloud. This is then processed though a surface reconstruction to get a solid mesh. More detail on this in the instruction section.
 
-## Installation
-
 ### Requirements
 1. Python 3.x, and the following libraries:
     - Scrapy
@@ -18,11 +16,12 @@ The data is outputted as a csv file that can be imported into a 3D program and v
 4. Wifi adaptor with monitor-mode capabilities
 5. Mobile device running Linux (Such as a Raspberry Pi, but any mobile Linux device should work)
 
-## 1. Setup
+### Installation
 Download the repository, ether as a zip or clone it, and install the required python libraries. You can do this manually using pip install, or use ```Python install -r requirements``` while in the downloaded repository folder.
 If you don’t have airmon-ng installed, install with the command:
 ``` sudo apt-get install aircrack-ng```
 
+## Setup
 Then we need to get the address of the GPS module and the WIFI adaptor. (If you don’t know how to do this see below) Take the address of the GPS module and inset into the code at the top where is say “GPSPATH” <-- Implement this 
 
 The script is thought and tested as being used with a Raspberry Pi (or other arm devices) in headless mode with a ssh connecting to a phone.
@@ -39,7 +38,7 @@ For the WIFI adaptor you simply use the command ` airmon-ng ` and look for your 
 `airmon-ng start wlan(x)`
 
 
-## 2. Usage
+## Usage
 The script takes in one mandatory argument (Capture interface) and two optional arguments (log output and output path)
 
 Args:
