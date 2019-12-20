@@ -22,7 +22,8 @@ If you don’t have airmon-ng installed, install with the command:
 ``` sudo apt-get install aircrack-ng```
 
 ## Setup
-Then we need to get the address of the GPS module and the WIFI adaptor. (If you don’t know how to do this see below) Take the address of the GPS module and inset into the code at the top where is say “GPSPATH” <-- Implement this 
+Then we need to get the address of the GPS module and the WIFI adaptor. (If you don’t know how to do this see below) Take the address of the GPS module and inset into the code at the top where is say 
+`GPSPATH = None` Change the None for the path to your module
 
 The script is thought and tested as being used with a Raspberry Pi (or other arm devices) in headless mode with a ssh connecting to a phone.
 
