@@ -1,5 +1,5 @@
 # Overview
-Wi-Form is a open-source and international endeavour to map and give form to places’ WIFI signature. This is done through a reworked take on Wardriving, Warwalking, etc.
+Wi-Form is a endeavour to map and give form to places’ WIFI signature. This is done through a reworked take on Wardriving, Warwalking, etc.
 
 A mobile device with a GPS module and a WIFI module (with a monitor-mode capabilities) collect the WIFI probes sent by nearby devices. The data is then stored in a 3 dimensional table, where the X and Y are the latitude and longitude and the Z is the strength of the probe signal.
 
@@ -51,5 +51,51 @@ Example:
 ` python main.py -i wlan0mon -l -o /home/user/Desktop `
 
 This command will show collection of data in realtime and save the output file on the desktop.
+
+## Post processing
+
+Post-processing / Making the mesh
+The process of making the pointcloud into a solid mesh a multiple stepped process. The process uses two programs to generate the mesh:
+- Blender 2.7
+	- With the cvs importer plugin <a href="https://blenderartists.org/t/a-script-to-import-a-csv-file-and-create-meshes-for-blender-2-5x-or-later/501410">Link to plugin</a> 
+- Meshmixer
+
+Keep in mind this is an experimental process, so play around with the settings until you get something that you think works.
+
+    1. Import to blender using the csv importer
+    
+    2. Export as DAE
+    
+    3. Open DAE in meshmixer
+        Render->
+        [*] Show Vertex Normals
+    
+    4. Filters->Point Set →
+        [*] Compute Normals Neighbors 14
+        [*] Flip Normals checked
+    
+    5. Filters->SamplingFilters->
+        [*] Poisson-disk Samples: 5000 
+        [*] Base Mesh Sampling Checked
+    
+    6. Filters->Point Set->Surface Reconstruction
+        [*] Poisson Octree: 12
+        [*] Solver: 7
+    
+    7. Filters->Remeshing->
+        [*] LS3, 3 Iterations (default)
+    
+    8. Filters->Sampling->Vertex
+        [*] Attrib Transfer Source: *.ply
+        [*] Target: Poisson Mesh
+    
+    9. Transfer Geometry
+        [*] Transfer Normal
+    
+    10. Filters->Cleaning-> 
+        [*] Remove Duplicate Vertex
+    
+    11. Export as STL
+
 
 
