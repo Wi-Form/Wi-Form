@@ -17,26 +17,46 @@ The data is outputted as a csv file that can be imported into a 3D program and v
 5. Mobile device running Linux (Such as a Raspberry Pi, but any mobile Linux device should work)
 
 ### Installation
-Download the repository, ether as a zip or clone it, and install the required python libraries. You can do this manually using pip install, or use ```Python install -r requirements``` while in the downloaded repository folder.
-If you don’t have airmon-ng installed, install with the command:
-``` sudo apt-get install aircrack-ng```
+Download the repository, ether as a zip or clone it, and install the required python libraries. You can do this manually using pip install, or use the requirements.txt file while in the downloaded repository folder.
+And install aircrack-ng, if you don't have it. 
+```
+git clone https://github.com/Wi-Form/Wi-Form
+pip install -r requirements.txt
+# And if needed #
+sudo apt-get install aircrack-ng 
+```
 
 ## Setup
 Then we need to get the address of the GPS module and the WIFI adaptor. (If you don’t know how to do this see below) Take the address of the GPS module and inset into the code at the top where is say 
 `GPSPATH = None` Change the None for the path to your module
 
-The script is thought and tested as being used with a Raspberry Pi (or other arm devices) in headless mode with a ssh connecting to a phone.
+The script is thought and tested as being used with a Raspberry Pi (or other arm devices) in headless mode with a ssh connecting to a phone. There is a bash script template at https://github.com/Wi-Form/Wi-bash/ that makes the process of using the script on headless devices alot less painfull.
 
 ### Find the GPS&WIFI module address
 #### GPS
-With the GPS module unplugged open a terminal window and type ` ls /dev/ `. Then plug the module in and type ` ls /dev/ ` again. There should be a new address now – this is the module.
-Typically it is at “ttyACM(x)”, x being a number between 0 and 10.
+```
+# With the GPS module unplugged open a terminal window and type
+ls /dev/
+# Then plug the module in and type
+ls /dev/
+# There should be a new address now – this is the module.
+# Typically it is at “ttyACM(x)”, x being a number between 0 and 10.
+ls /dev/ | grep ttyACM
+# To make the output more manageable
+```
 
-So you could utilise ` ls /dev/ | grep ttyACM ` to make the output more manageable.
 
 #### WIFI adaptor
-For the WIFI adaptor you simply use the command ` airmon-ng ` and look for your preferred adaptor. Should be something like “wlan(x)”, but this can vary from distro to distro. You can then start the WIFI adaptor in monitor mode using:
-`airmon-ng start wlan(x)`
+For the WIFI adaptor you simply use the command ` airmon-ng ` and look for your preferred adaptor.
+Should be something like “wlan(x)”, but this can vary from distro to distro.
+You can then start the WIFI adaptor in monitor mode using the start command in airmon-ng
+
+```
+# Find adaptor
+airmon-ng
+# Start adaptor in monitor mode
+airmon-ng start wlan(x)
+```
 
 
 ## Usage
@@ -52,9 +72,7 @@ Example:
 
 This command will show collection of data in realtime and save the output file on the desktop.
 
-## Post processing
-
-Post-processing / Making the mesh
+## Post-processing / Making the mesh
 The process of making the pointcloud into a solid mesh a multiple stepped process. The process uses two programs to generate the mesh:
 - Blender 2.7
 	- With the cvs importer plugin <a href="https://blenderartists.org/t/a-script-to-import-a-csv-file-and-create-meshes-for-blender-2-5x-or-later/501410">Link to plugin</a> 
