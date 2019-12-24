@@ -8,17 +8,14 @@ from threading import *
 import os
 import argparse
 import csv
-
 import serial
-from math import sin, cos, radians, pi, atan, tan
 
-
+GpsPath = "#PATH TO GPS MODULE"
 fields = []
-fieldsDebug = []
 GpsStart = []
 
 
-DESCRIPTION = 'Program to collect wifi probes and GPS data to make 3D models'
+DESCRIPTION = 'Script to collect wifi probes and GPS data to make 3D models'
 
 class packetsniff(Thread):
 	# Setup of the sniffing deamon
@@ -66,7 +63,7 @@ class packetsniff(Thread):
 		
 def convertZ(zlist):
 	# Translate the collected rssi value
-	# to something that is relateble with lat&long value
+	# to something that is more relateble with lat&long value
 	netrssi = 0
 	if len(zlist) == 0:
 		z = float(0)
@@ -95,13 +92,18 @@ def GPSpuller(log):
 	'''
 	now = datetime.datetime.now()
 	now = now.strftime('%H, %M, %S')
-	gps = serial.Serial("/dev/ttyACM0", baudrate=9600) # Path to GPS module
+	gps = serial.Serial(GpsPath, baudrate=9600)
 	output = []
 	GpsStart = None
 	itter = 0
 	while True:
+		# Reads data from GPS module
 		line = gps.readline()
 		data = line.split(",")
+		
+		# If there is a vilid signal
+		# the starting coodinates is writen to GpsStart
+		# and the coordintes are writen to file
 		if data[2] == "A" and GpsStart == None:
 			GpsStart = [data[3],data[5]]
 			StartingCoor.write(str([data[3],data[5]]))
@@ -109,15 +111,14 @@ def GPSpuller(log):
 			print('Starting condinates - ',GpsStart)
 			if len(fields) != 0:
 				del fields[0]
-		if GpsStart != None:
-			
-			# Checks if GPS signal is valid #
+		
+		if GpsStart != None:		
+			# Checks if GPS signal is still valid #
 			if data[0] == "$GPRMC" and data[2] == "V":
 				if log:
-					print('no gps connection')
-					print('length of fields', len(fields))
-				if len(fields)>2:
-					del fields[0]		
+					print('No gps connection')
+					if fields > 2:
+						del fields[0]		
 
 			# If signal is valid 
 			# Appends converted GPS condinates and RSSI to output list 
@@ -125,7 +126,6 @@ def GPSpuller(log):
 			if data[0] == "$GPRMC" and data[2] == "A":
 				output.append(addConvert(data[3], data[5], fields, GpsStart))
 				
-
 				if log:
 					print(itter, output[-1])
 
@@ -141,16 +141,17 @@ def GPSpuller(log):
 
 
 if __name__ == "__main__":
-
+	
 	# Setup of argumentparser #
 	parser = argparse.ArgumentParser(description=DESCRIPTION)
-	parser.add_argument('-i', '--interface', help="Capture interface")
-	parser.add_argument('-o', '--output', default='output.csv', help='Output name for csv file')
+	parser.add_argument('-i', '--interface', help='Capture interface', metavar='')
+	parser.add_argument('-o', '--output', default='output.csv', help='Output name for csv file', metavar='')
 	parser.add_argument('-l', '--log', action='store_true', help='Write log to the consol')
 	args = parser.parse_args()
 	if not args.interface:
-		print ("error: capture interface not given, try --help")
+		print ("Error: capture interface not given, try --help")
 		sys.exit(-1)
+	
 
 	# Setup thread for sniffer #
 	sniffer = packetsniff(args.interface)	
@@ -159,11 +160,16 @@ if __name__ == "__main__":
 	if not os.path.exists(os.path.dirname(__file__)+'/data'):
 		os.makdirs(os.path.dirname(__file__)+'/data')
 	folder = os.path.dirname(__file__)+'/data/'+args.output[:-4]
-	if folder == True:
+	# Check if folder exists #
+	if os.path.exists(folder):
 		print(
 			'Please choose another file name'
 			'\nOne with this name already exists'
 			)
+		# Check if tmux is running
+		if os.system('pidof tmux') != 256:
+			time.sleep(10)
+			os.system("pkill tmux")
 		sys.exit(-1)
 	os.makedirs(folder)
 
@@ -179,8 +185,11 @@ if __name__ == "__main__":
 		sniffer.start()
 		GPSpuller(args.log)
 
-	#Quit and shutdown deamon, when you press ctrl+c
+	# Quit and shutdown deamon, when you press ctrl+c
 	except KeyboardInterrupt, SystemExit:
 		print ("\nKilling Thread...")
 		sniffer.join(2)
 		print ("Done.\nExiting.")
+		time.sleep(1)
+		# Kills tmux session if running
+		os.system("pkill tmux")
