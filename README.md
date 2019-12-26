@@ -75,9 +75,10 @@ This command will show collection of data in realtime and save the output file o
 ## Post-processing / Making the mesh
 <p align="center"><img src="https://wi-form.com/wp-content/uploads/2019/12/infographic-22-12-2019.png"/></p>
 The process of making the pointcloud into a solid mesh a multiple stepped process. The process uses two programs to generate the mesh:
-- Blender 2.7
-	- With the cvs importer plugin <a href="https://blenderartists.org/t/a-script-to-import-a-csv-file-and-create-meshes-for-blender-2-5x-or-later/501410">Link to plugin</a> 
-- Meshmixer
+
+* Blender 2.7
+* With the cvs importer plugin <a href="https://blenderartists.org/t/a-script-to-import-a-csv-file-and-create-meshes-for-blender-2-5x-or-later/501410">Link to plugin</a> 
+* Meshmixer
 
 Keep in mind this is an experimental process, so play around with the settings until you get something that you think works.
 
