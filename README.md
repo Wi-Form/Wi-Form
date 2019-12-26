@@ -117,5 +117,19 @@ Keep in mind this is an experimental process, so play around with the settings u
     
     11. Export as STL
 
+## Sharing and contributing
+If you get a form that you wanna share with others, you can head over to <a href="https://www.Wi-Form.com">Wi-Form.com</a> and upload your form as an .obj which will then be featured on the sites gallery.
+
+#### Setting up your file
+For preformence resons the form can have a maximum of 2500 faces. Usually the forms have alot more, so to get the face count down you can use the decimator module in Blender.
+
+You also need to supplie the starting coordinates for the form, which can be found in the folder that was created when you collected the data.
+
+But other than that, you are free to upload all the forms you want.
+
+### Contributing
+The Wi-Form project strive to evolve as people interact with it. So pull requests and forks are more than welcome. Rewrite, transform or remake the script in any way you see fit.
+
+
 
 
